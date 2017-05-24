@@ -1,0 +1,354 @@
+<script>
+   $(document).ready(function() {
+	 $("#button1").click(function() {
+       $('#stone').show();
+       $('#paper').hide();
+     	});
+    });
+
+    $(document).ready(function() {
+    $("#button2").click(function() {
+        $('#stone1').show();
+        $('#pink').hide();
+       });
+     });
+     var price = 300; //price
+     $(document).ready(function() {
+     	var $cart = $('#selected-seats'), //Sitting Area
+     	$counter = $('#counter'), //Votes
+     	$total = $('#total'); //Total money
+      $rootScope = ($("#seatNo").val());
+
+
+     	var sc = $('#seat-map').seatCharts({
+     		map: [
+     			'aa_aaaa_aa',
+           'aa_aaaa_aa',
+           'aa_aaaa_aa',
+           'aa_aaaa_aa',
+           'aa_aaaa_aa',
+     			'aa_aaaa_aa',
+     			'aa_aaaa_aa',
+     			'aa_aaaa_aa',
+     			'aa_aaaa_aa',
+           'aa_aaaa_aa'
+     		],
+     		naming : {
+     			top : false,
+     			getLabel : function (character, row, column) {
+     				return column;
+     			}
+     		},
+     		legend : { //Definition legend
+     			node : $('#legend'),
+     			items : [
+     				[ 'a', 'available',   'Available Seats' ],
+     				[ 'a', 'unavailable', 'Reserved Seats']
+     			]
+     		},
+     		click: function () { //Click event
+     			if (this.status() == 'available') { //optional seat
+     				$('<li>R'+(this.settings.row+1)+' S'+this.settings.label+'</li>')
+     					.attr('id', 'cart-item-'+this.settings.id)
+     					.data('seatId', this.settings.id)
+     					.appendTo($cart);
+
+     				$counter.text(sc.find('selected').length+1);
+     				$total.text(recalculateTotal(sc)+price);
+
+     				return 'selected';
+     			} else if (this.status() == 'selected') { //Checked
+     					//Update Number
+     					$counter.text(sc.find('selected').length-1);
+     					//update totalnum
+     					$total.text(recalculateTotal(sc)-price);
+
+     					//Delete reservation
+     					$('#cart-item-'+this.settings.id).remove();
+     					//optional
+     					return 'available';
+     			} else if (this.status() == 'unavailable') { //sold
+     				return 'unavailable';
+     			} else {
+     				return this.style();
+     			}
+     		}
+     	});
+     	//sold seat
+     	sc.get(['1_2', '4_4','4_5','6_6','6_7','8_5','8_6','8_7','8_8', '10_1', '10_2']).status('unavailable');
+
+     });
+     //sum total money
+     function recalculateTotal(sc) {
+     	var total = 0;
+     	sc.find('selected').each(function () {
+     		total += price;
+     	});
+
+     	return total;
+     }
+
+
+</script>
+
+
+<style>
+.content
+{
+  background: white;
+  color: black;
+}
+#stone
+{
+display: none;
+}
+  .photo
+  {
+    margin: 10px;
+   display: inline-block;
+   align: center;
+
+  }
+  .front{width: 300px;margin: 5px 32px 45px 32px;background-color: #f0f0f0; color: #666;text-align: center;padding: 3px;border-radius: 5px;}
+.booking-details {float: right;position: relative;width:600px;height: 450px; }
+.booking-details h3 {margin: 5px 5px 0 0;font-size: 16px;}
+.booking-details p{line-height:26px; font-size:16px; color:#999}
+.booking-details p span{color:#666}
+div.seatCharts-cell {color: #182C4E;height: 25px;width: 25px;line-height: 25px;margin: 3px;float: left;text-align: center;outline: none;font-size: 13px;}
+div.seatCharts-seat {color: #fff;cursor: pointer;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius: 5px;}
+div.seatCharts-row {height: 35px;}
+div.seatCharts-seat.available {background-color: green;}
+div.seatCharts-seat.focused {background-color: cyan;border: none;}
+div.seatCharts-seat.selected {background-color: blue;}
+div.seatCharts-seat.unavailable {background-color: red;cursor: not-allowed;}
+div.seatCharts-container {border-right: 1px dotted #adadad;width: 600px;padding: 20px;float: left;}
+div.seatCharts-legend {padding-left: 0px;position: absolute;bottom: 16px;}
+ul.seatCharts-legendList {padding-left: 0px;}
+.seatCharts-legendItem{float:left; width:90px;margin-top: 10px;line-height: 2;}
+span.seatCharts-legendDescription {margin-left: 5px;line-height: 30px;}
+.checkout-button {display: block;width:80px; height:24px; line-height:20px;margin: 10px auto;border:1px solid #999;font-size: 14px; cursor:pointer}
+#selected-seats {max-height: 150px;overflow-y: auto;overflow-x: none;width: 200px;}
+#selected-seats li{float:left; width:72px; height:26px; line-height:26px; border:1px solid #d3d3d3; background:#f7f7f7; margin:6px; font-size:14px; font-weight:bold; text-align:center}
+
+</style>
+<div id="paper">
+<form>
+  <div class="col-md-12">
+  <div class="table-responsive">
+
+<table class="table table-condensed">
+  <tr>
+    <th><font size="5">Theatre City</font></th>
+    <th><font size="5">Theatre Location</font></th>
+    <th><font size="5">Theatre Name</font></th>
+    <th><font size="5">Movie Name</font></th>
+    <th><font size="5">Movie Date</font></th>
+    <th><font size="5">Movie Time</font></th>
+  </tr>
+  <tr>
+<td><select  ng-model="$ctrl.shivCity" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping | unique:'theatreCity'" value="{{shiv.theatreCity}}">{{shiv.theatreCity}}</option>
+</select></td>
+<br>
+
+<td><select  ng-model="$ctrl.shivLocation" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping | filter: {'theatreCity':$ctrl.shivCity}" value="{{shiv.theatreLocation}}">{{shiv.theatreLocation}}</option>
+</select></td>
+<br>
+<td>
+<select ng-model="$ctrl.shivName" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping | filter: {'theatreLocation':$ctrl.shivLocation}" value="{{shiv.theatreName}}">{{shiv.theatreName}}</option>
+</select></td>
+<br>
+<td>
+<select ng-model="$ctrl.movieTitle" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping" value="{{shiv.movieName}}">{{shiv.movieName}}</option>
+</select></td>
+<br>
+<td>
+<select ng-model="$ctrl.shivDate" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping" value="{{shiv.movieDate}}">{{shiv.movieDate}}</option>
+</select></td>
+<br>
+<td>
+<select ng-model="$ctrl.shivTime" class="btn dropdown-toggle btn-select">
+<option ng-repeat="shiv in $ctrl.shivMapping | unique:'movieTime'" value="{{shiv.movieTime}}">{{shiv.movieTime}}</option>
+</select></td>
+</tr>
+<br>
+</table>
+</div>
+</div>
+<div>
+</form>
+
+
+<br>
+<input id="button1" class="btn btn-success" type="button" value="Proceed to Seat Selection" ng-model="myhidden">
+<br>
+<div class="col-md-12">
+<div class="table-responsive">
+<table class="table table-bordered" style="display: none;">
+  <tr>
+    <th>City</th>
+    <th>Location</th>
+    <th>Name</th>
+    <th>Movie</th>
+    <th>Date</th>
+    <th>Time</th>
+    <!-- <th>Seat No.</th> -->
+    <th>User</th>
+    <th>Email</th>
+  </tr>
+
+  <tr ng-repeat="shiv in $ctrl.seat">
+    <td>{{shiv.shivCity}}</td>
+    <td>{{shiv.shivLocation}}</td>
+    <td>{{shiv.shivName}}</td>
+    <td>{{shiv.movieTitle}}</td>
+    <td>{{shiv.shivDate}}</td>
+    <td>{{shiv.shivTime}}</td>
+    <!-- <td>{{shiv.SeatNo}}</td> -->
+    <td>{{shiv.userName}}</td>
+    <td>{{shiv.EmailId}}</td>
+  </tr>
+
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="stone">
+  <div id="pink">
+  <div class="demo">
+       <div id="seat-map">
+       <div class="front">SCREEN</div>
+     </div>
+     <div class="booking-details">
+       <p>Seats that you selected are:
+       <span id="selected-seats" ></span></p>
+         <BR>
+       <p>Total Number of Tickets: <span id="counter">0</span></p>
+  <BR>
+       <p>Total Amount: <b>Rs. <span id="total" >0</span></b></p>
+
+       <div id="legend"></div>
+     </div>
+     <div style="clear:both"></div>
+
+     <button id="button2" class="btn btn-success" type="button" >Proceed to Payment Page</button>
+   </div>
+   </div>
+     <div id="stone1" style="display: none;">
+       <div class="container">
+         <div class="row">
+           <div class="span12">
+             <form class="form-horizontal span6">
+               <fieldset>
+                 <legend><font size="7"><i><b>Payment<b><i></font></legend>
+
+                 <div class="photo">
+                   <img src=".\assets\images\visa.png" height="20%" width="40%">
+                   <img src=".\assets\images\master.png" height="20%" width="40%">
+                   <!-- <img src=".\assets\images\maestro.png" height="20%" width="40%"> -->
+                 </div>
+                 <div class="control-group">
+                   <label class="control-label"><span class="glyphicon glyphicon-edit"></span>Card Holder's Name</label>
+                   <div class="controls">
+                     <input type="text" class="input-block-level" pattern="^[a-zA-Z0-9._-]+$" ng-model="$ctrl.userName" title="Enter the Name on card" required>
+                   </div>
+                 </div>
+
+                 <div class="control-group">
+                   <label class="control-label"><span class="glyphicon glyphicon-credit-card"></span>Card Number</label>
+                   <div class="controls">
+                     <div class="row-fluid">
+                       <div class="span3">
+                         <input type="text" class="input-block-level" pattern="^(\d{4}-){3}\d{4}$|^(\d{4}){3}\d{4}$|^\d{16}$" title="Enter you card number" required>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+
+                 <div class="control-group">
+                   <label class="control-label">Email</label>
+                   <div class="controls">
+                     <input type="email" class="input-block-level" ng-model="$ctrl.EmailId" pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" title="enter your email example@domain.com" required>
+                   </div>
+                 </div>
+
+                 <div class="control-group">
+                   <label class="control-label"><span class="glyphicon glyphicon-phone"></span>Mobile Number</label>
+                   <div class="controls">
+                     <input type="text" class="input-block-level" placeholder="+912345678901" title="Enter your mobile number" required>
+                   </div>
+                 </div>
+
+                 <div class="control-group">
+                   <label class="control-label"><span class="glyphicon glyphicon-calendar"></span>Card Expiry Date</label>
+                <div class="controls">
+                  <div class="row-fluid">
+                    <div class="span9">
+                      <select class="input-block-level">
+                        <option>January</option>
+                        <option>Febreory</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>Augest</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                      </select>
+
+                      <select class="input-block-level">
+                        <option>2017</option>
+                        <option>2018</option>
+                        <option>2019</option>
+                        <option>2020</option>
+                        <option>2021</option>
+                        <option>2022</option>
+                        <option>2023</option>
+                        <option>2024</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                        <option>2027</option>
+                        <option>2028</option>
+                        <option>2029</option>
+                        <option>2030</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label"><span class="glyphicon glyphicon-lock"></span>Card CVV</label>
+                <div class="controls">
+                  <div class="row-fluid">
+                    <div class="span3">
+                      <input type="text" class="input-block-level" autocomplete="off" maxlength="3" pattern="^([0-9]{3,4})$" title="Three digits at back of your card" required>
+                    </div>
+                    <div class="span8">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" ng-click="$ctrl.addInfo()">Submit</button>
+                <button type="button" class="btn" ng-click="nav.isLoggedIn()"><a href="/logout">Cancel</a></button>
+              </div>
+
+            </fieldset>
+          </form>
+        </div>
+       </div>
+       </div>
+       </div>
+
+    </div>

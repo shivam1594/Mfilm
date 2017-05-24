@@ -1,0 +1,78 @@
+<script type="text/javascript">
+   $(function() {
+      $('#example').barrating({
+        theme: 'fontawesome-stars'
+      });
+   });
+</script>
+
+<style type="text/css">
+
+#pure
+{
+  width: 80%;
+  display: inline-table;
+  margin-left: 10%;
+  text-align: center;
+}
+th{
+  text-align: center;
+}
+</style>
+
+<form class="container-fluid">
+  <div class="col-md-12">
+  <div class="table-responsive">
+<table class="table table-condensed" style="width: 100%;background-color: #dddddd;border-radius: 5px;text-align: center;">
+  <tr>
+
+        <th><font size="5">Movie</font></th>
+        <th><font size="5">Enter Your Name</font></th>
+        <th><font size="5">Enter Your Review</font></th>
+        <th><font size="5">Rating</font></th>
+        <th><font size="5">Add</font></th>
+
+  </tr>
+  <tr>
+        <td><select ng-model="$ctrl.shivMovie" value class="btn dropdown-toggle btn-select" data-toggle="dropdown">
+    <option ng-repeat="m in $ctrl.shivMovie" value="{{m.Title}}">{{m.Title}}</option>
+  </select></td>
+
+        <td><input type="text" class="form-control" placeholder="Your Name" ng-model="$ctrl.name"></input></td>
+        <td><input type="text" class="form-control" placeholder="review" ng-model="$ctrl.review"></input></td>
+        <td>
+          <select id="example" ng-model="$ctrl.rating" value class="btn dropdown-toggle btn-select" data-toggle="dropdown">
+            <option value="star 1">star 1</option>
+            <option value="star 2">star 2</option>
+            <option value="star 3">star 3</option>
+            <option value="star 4">star 4</option>
+            <option value="star 5">star 5</option>
+          </select>
+        </td>
+
+        <td><button type="submit" class="btn btn-primary" ng-click="$ctrl.addRating()"> Submit </button></td>
+
+  </tr>
+</table>
+</div>
+</div>
+
+</form>
+
+<table id="pure" class="table table-bordered">
+  <tr>
+    <th><font size="3">Movie</font></th>
+    <th><font size="3">Name</font></th>
+    <th><font size="3">Review</font></th>
+    <th><font size="3">Rating</font></th>
+    <th><font size="3">Button</font></th>
+  </tr>
+
+  <tr ng-repeat="shiv in $ctrl.shivRating">
+    <td>{{shiv.shivMovie}}</td>
+    <td>{{shiv.name}}</td>
+    <td>{{shiv.review}}</td>
+    <td>{{shiv.rating}}</td>
+    <td><button type="delete" class="btn btn-danger" ng-click="$ctrl.deleteRating(shiv)"> Delete </button></td>
+  </tr>
+</table>
